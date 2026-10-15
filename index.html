@@ -3,244 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রিয়েলিস্টিক থ্রি-ডি ভার্চুয়াল বই</title>
+    <title>রিয়েলিস্টিক বুক ফ্লিপ অ্যালবাম</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
+    <!-- jQuery এবং Turn.js লাইব্রেরি (আসল বইয়ের পাতা উল্টানোর জন্য) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
     <style>
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background: radial-gradient(circle, #2a3b4c 0%, #101722 100%);
+            background: radial-gradient(circle, #2c3e50 0%, #0f172a 100%);
             min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
 
-        /* বুক স্টেজ ও পার্সপেক্টিভ */
-        .scene {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 80vh;
-            perspective: 2000px;
-        }
-
-        .book {
-            position: relative;
+        /* ফ্লিপ বুক সাইজ */
+        #album {
             width: 800px;
             height: 500px;
-            transform-style: preserve-3d;
-            transform: rotateX(10deg);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            border-radius: 5px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+
+        #album .page {
+            background-color: #fdfbf7;
+            color: #2d3748;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #d1c7bd;
         }
 
         @media (max-width: 850px) {
-            .book {
+            #album {
                 width: 95vw;
                 height: 400px;
             }
         }
-
-        .page {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            top: 0;
-            left: 50%;
-            transform-origin: left center;
-            transform-style: preserve-3d;
-            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .page.left {
-            left: 0;
-            transform-origin: right center;
-        }
-
-        .page-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            background-color: #fdfbf7;
-            border: 1px solid #d1c7bd;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .page-face.front {
-            transform: rotateY(0deg);
-        }
-
-        .page-face.back {
-            transform: rotateY(180deg);
-        }
-
-        /* পেজ ফ্লিপ হওয়ার সময় ক্লাসিক শ্যাডো এফেক্ট */
-        .page.flipped {
-            transform: rotateY(-180deg);
-        }
-
-        /* বইয়ের বাইন্ডিং বা মাঝখানের খাঁজ */
-        .book-spine {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 20px;
-            height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.4), rgba(0,0,0,0.2));
-            transform: translateX(-50%);
-            z-index: 100;
-            pointer-events: none;
-        }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between p-4">
+<body>
 
     <!-- হেডার -->
-    <header class="text-center mt-2">
-        <h1 class="text-2xl md:text-3xl font-bold text-amber-100 serif-font tracking-wide">রিয়েলিস্টিক ফ্লিপ বুক অ্যালবাম</h1>
-        <p class="text-xs text-slate-400 mt-1">পাতার ওপর ক্লিক করে বা নিচের বাটন দিয়ে পাতা উল্টান</p>
+    <header class="text-center mb-4">
+        <h1 class="text-2xl md:text-3xl font-bold text-amber-100 serif-font">ভার্চুয়াল রিয়েলিস্টিক অ্যালবাম</h1>
+        <p class="text-xs text-slate-400 mt-1">পাতার কোণ ধরে মাউস দিয়ে টেনে বা নিচের বাটন দিয়ে পাতা উল্টান</p>
     </header>
 
-    <!-- থ্রি-ডি বুক স্টেজ -->
-    <main class="scene">
-        <div class="book" id="book">
-            <div class="book-spine"></div>
-
-            <!-- পেজ ১ (প্রচ্ছদ) -->
-            <div class="page" id="p1" onclick="turnPage(1)">
-                <div class="page-face front bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 p-8 flex flex-col justify-center items-center text-center">
-                    <span class="text-xs uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-4">ডিজিটাল অ্যালবাম</span>
-                    <h2 class="text-3xl md:text-4xl font-bold serif-font text-amber-100">স্মৃতির পাতা</h2>
-                    <div class="w-16 h-1 bg-amber-400 my-4 rounded-full"></div>
-                    <p class="text-xs text-amber-200/80 italic">খুলতে পাতায় ক্লিক করুন</p>
-                </div>
-                <div class="page-face back bg-[#fbf9f1] p-6 flex flex-col justify-between text-slate-800">
-                    <span class="text-xs text-amber-700 font-semibold">ভূমিকা</span>
-                    <div class="text-center">
-                        <h3 class="text-xl font-bold serif-font mb-2">অতীতের দিনগুলি</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">জীবনের কিছু মুহূর্ত ক্যামেরার ফ্রেমে বন্দী হয়ে চিরকালের মতো অমলিন হয়ে থাকে। এই অ্যালবামে সেইসব সোনালী মুহূর্তের কিছু ঝলক তুলে ধরা হলো।</p>
-                    </div>
-                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ১</span>
-                </div>
-            </div>
-
-            <!-- পেজ ২ (ছবি ও বিবরণ ১) -->
-            <div class="page" id="p2" onclick="turnPage(2)">
-                <div class="page-face front bg-[#fbf9f1] p-4 flex flex-col justify-between text-slate-800">
-                    <span class="text-xs text-amber-700 font-semibold">অধ্যায় ১</span>
-                    <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Nature" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-900">পাহাড়ের কোলের স্নিগ্ধ সকাল</h4>
-                        <p class="text-[11px] text-slate-600 mt-1">প্রকৃতির কাছাকাছি কাটানো সেই সময়গুলোর শান্তি আজও মনে দাগ কেটে যায়।</p>
-                    </div>
-                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ২</span>
-                </div>
-                <div class="page-face back bg-[#fbf9f1] p-4 flex flex-col justify-between text-slate-800">
-                    <span class="text-xs text-amber-700 font-semibold">অধ্যায় ২</span>
-                    <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
-                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Forest" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-sm text-slate-900">সবুজের সমারোহ</h4>
-                        <p class="text-[11px] text-slate-600 mt-1">গভীর অরণ্যের মাঝ দিয়ে বয়ে চলা মেঠো পথ আর পাখির কলকাকলি।</p>
-                    </div>
-                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ৩</span>
-                </div>
-            </div>
-
-            <!-- পেজ ৩ (শেষ পাতা) -->
-            <div class="page" id="p3" onclick="turnPage(3)">
-                <div class="page-face front bg-[#fbf9f1] p-6 flex flex-col justify-between text-slate-800">
-                    <span class="text-xs text-amber-700 font-semibold">উপসংহার</span>
-                    <div class="text-center space-y-3">
-                        <i class="fa-solid fa-heart text-3xl text-amber-600"></i>
-                        <h3 class="text-xl font-bold serif-font">ভালো থাকুন, স্মৃতির সাথে থাকুন</h3>
-                        <p class="text-xs text-slate-600">আমাদের এই ছোট্ট ভার্চুয়াল ডায়েরিটি পড়ার জন্য আপনাকে ধন্যবাদ।</p>
-                    </div>
-                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ৪</span>
-                </div>
-                <div class="page-face back bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 p-8 flex flex-col justify-center items-center text-center">
-                    <h3 class="text-2xl font-bold serif-font mb-2">সমাপ্ত</h3>
-                    <p class="text-xs text-amber-200/80 mb-6">আবার প্রথম থেকে দেখতে নিচের বাটন ব্যবহার করুন।</p>
-                    <button onclick="resetBook(event)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition shadow">শুরুতে ফিরে যান</button>
-                </div>
-            </div>
-
+    <!-- বুক কন্টেইনার -->
+    <div id="album">
+        <!-- প্রচ্ছদ পাতা (Page 1) -->
+        <div class="page bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 flex flex-col justify-center items-center text-center">
+            <span class="text-xs uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-4">অ্যালবাম ও ডায়েরি</span>
+            <h2 class="text-3xl md:text-4xl font-bold serif-font text-amber-100">স্মৃতির সোনালী পাতা</h2>
+            <div class="w-16 h-1 bg-amber-400 my-4 rounded-full"></div>
+            <p class="text-xs text-amber-200/80 italic">পাতা উল্টাতে কোণায় ড্র্যাগ করুন</p>
         </div>
-    </main>
 
-    <!-- নেভিগেশন কন্ট্রোল -->
-    <footer class="w-full max-w-xs flex justify-between items-center mb-2">
-        <button onclick="prevPage()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700">
-            <i class="fa-solid fa-arrow-left mr-1"></i> পেছনের পাতা
+        <!-- পেজ ২ -->
+        <div class="page flex flex-col justify-between">
+            <span class="text-xs text-amber-700 font-semibold">অধ্যায় ১</span>
+            <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Nature" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h4 class="font-bold text-sm text-slate-900">প্রকৃতির স্নিগ্ধ রূপ</h4>
+                <p class="text-[11px] text-slate-600 mt-1">পাহাড়ের কোল ঘেষে বয়ে চলা নদী আর সকালের মিষ্টি রোদ।</p>
+            </div>
+            <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ২</span>
+        </div>
+
+        <!-- পেজ ৩ -->
+        <div class="page flex flex-col justify-between">
+            <span class="text-xs text-amber-700 font-semibold">অধ্যায় ২</span>
+            <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Forest" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <h4 class="font-bold text-sm text-slate-900">সবুজের সমারোহ</h4>
+                <p class="text-[11px] text-slate-600 mt-1">গভীর অরণ্যের মাঝে হারিয়ে যাওয়ার এক অদ্ভুত ভালোলাগা।</p>
+            </div>
+            <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ৩</span>
+        </div>
+
+        <!-- শেষ পাতা (Page 4) -->
+        <div class="page bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 flex flex-col justify-center items-center text-center">
+            <i class="fa-solid fa-heart text-3xl text-amber-400 mb-3"></i>
+            <h3 class="text-2xl font-bold serif-font mb-2">সমাপ্ত</h3>
+            <p class="text-xs text-amber-200/80 mb-6">আমাদের সাথে থাকার জন্য ধন্যবাদ।</p>
+            <button onclick="$('#album').turn('page', 1);" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition shadow">শুরুতে ফিরে যান</button>
+        </div>
+    </div>
+
+    <!-- নেভিগেশন বাটন -->
+    <div class="flex gap-4 mt-6">
+        <button onclick="$('#album').turn('previous');" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700">
+            <i class="fa-solid fa-arrow-left mr-1"></i> আগের পাতা
         </button>
-        <button onclick="nextPage()" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition">
+        <button onclick="$('#album').turn('next');" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition">
             পরের পাতা <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
-    </footer>
+    </div>
 
-    <!-- জাভাস্ক্রিপ্ট লজিক -->
+    <!-- Turn.js ইনিশিয়ালাইজেশন স্ক্রিপ্ট -->
     <script>
-        let currentLocation = 1;
-        const numOfPages = 3;
-
-        function updateBookView() {
-            // পেজগুলোর ফ্লিপ স্ট্যাটাস সেট করা
-            for (let i = 1; i <= numOfPages; i++) {
-                const page = document.getElementById(`p${i}`);
-                if (i < currentLocation) {
-                    page.classList.add('flipped');
-                    page.style.zIndex = i;
-                } else {
-                    page.classList.remove('flipped');
-                    page.style.zIndex = numOfPages - i + 1;
+        $(document.ready = function() {
+            $('#album').turn({
+                width: 800,
+                height: 500,
+                autoCenter: true,
+                gradients: true,
+                elevation: 50,
+                when: {
+                    turning: function(e, page, view) {
+                        // পাতা উল্টানোর সময় কোনো বিশেষ কাজ করাতে চাইলে এখানে লেখা যাবে
+                    }
                 }
-            }
-        }
+            });
+        });
 
-        function nextPage() {
-            if (currentLocation <= numOfPages) {
-                currentLocation++;
-                updateBookView();
+        // রেসপন্সিভ করার জন্য স্ক্রিন সাইজ পরিবর্তন হলে বইয়ের সাইজ অ্যাডজাস্ট করা
+        $(window).resize(function() {
+            var width = $(window).width();
+            if(width < 850) {
+                $('#album').turn('size', width * 0.95, 400);
+            } else {
+                $('#album').turn('size', 800, 500);
             }
-        }
-
-        function prevPage() {
-            if (currentLocation > 1) {
-                currentLocation--;
-                updateBookView();
-            }
-        }
-
-        function turnPage(pageNum) {
-            if (pageNum === currentLocation) {
-                nextPage();
-            } else if (pageNum === currentLocation - 1) {
-                prevPage();
-            }
-        }
-
-        function resetBook(event) {
-            event.stopPropagation();
-            currentLocation = 1;
-            updateBookView();
-        }
+        });
     </script>
 </body>
 </html>
