@@ -3,57 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ভার্চুয়াল ফটো অ্যালবাম ও ডায়রি</title>
-    <!-- Tailwind CSS এবং Font Awesome -->
+    <title>রিয়েলিস্টিক থ্রি-ডি ভার্চুয়াল বই</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Bengali & English) -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(circle, #2a3b4c 0%, #101722 100%);
             min-height: 100vh;
+            overflow: hidden;
         }
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
-        /* বুক ফ্লিপ কন্টেইনার পার্সপেক্টিভ */
-        .book-container {
-            perspective: 1500px;
+
+        /* বুক স্টেজ ও পার্সপেক্টিভ */
+        .scene {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 80vh;
+            perspective: 2000px;
         }
+
         .book {
             position: relative;
-            width: 100%;
-            max-width: 900px;
-            height: 520px;
+            width: 800px;
+            height: 500px;
             transform-style: preserve-3d;
-            transition: transform 0.5s ease;
+            transform: rotateX(10deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            border-radius: 5px;
         }
-        @media (max-width: 768px) {
+
+        @media (max-width: 850px) {
             .book {
-                height: 650px;
+                width: 95vw;
+                height: 400px;
             }
         }
+
         .page {
             position: absolute;
-            width: 100%;
+            width: 50%;
             height: 100%;
             top: 0;
-            left: 0;
-            transform-origin: left;
+            left: 50%;
+            transform-origin: left center;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-            display: none;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+            user-select: none;
         }
-        .page.active {
-            display: block;
+
+        .page.left {
+            left: 0;
+            transform-origin: right center;
         }
-        .page.flipped {
-            transform: rotateY(-180deg);
-            z-index: 10;
-        }
+
         .page-face {
             position: absolute;
             width: 100%;
@@ -62,172 +74,173 @@
             left: 0;
             backface-visibility: hidden;
             -webkit-backface-visibility: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border-radius: 12px;
+            background-color: #fdfbf7;
+            border: 1px solid #d1c7bd;
             overflow: hidden;
+            box-sizing: border-box;
         }
-        .page-back {
+
+        .page-face.front {
+            transform: rotateY(0deg);
+        }
+
+        .page-face.back {
             transform: rotateY(180deg);
+        }
+
+        /* পেজ ফ্লিপ হওয়ার সময় ক্লাসিক শ্যাডো এফেক্ট */
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* বইয়ের বাইন্ডিং বা মাঝখানের খাঁজ */
+        .book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.4), rgba(0,0,0,0.2));
+            transform: translateX(-50%);
+            z-index: 100;
+            pointer-events: none;
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-between p-4 md:p-8">
+<body class="flex flex-col items-center justify-between p-4">
 
     <!-- হেডার -->
-    <header class="text-center mb-4">
-        <h1 class="text-3xl md:text-4xl font-bold text-amber-100 serif-font tracking-wide">স্মৃতির পাতা</h1>
-        <p class="text-sm text-slate-400 mt-1">ভার্চুয়াল অ্যালবাম ও ছবির ডায়েরি</p>
+    <header class="text-center mt-2">
+        <h1 class="text-2xl md:text-3xl font-bold text-amber-100 serif-font tracking-wide">রিয়েলিস্টিক ফ্লিপ বুক অ্যালবাম</h1>
+        <p class="text-xs text-slate-400 mt-1">পাতার ওপর ক্লিক করে বা নিচের বাটন দিয়ে পাতা উল্টান</p>
     </header>
 
-    <!-- মেইন বুক বা অ্যালবাম এরিয়া -->
-    <main class="book-container w-full flex items-center justify-center my-auto">
-        <div class="book bg-[#fdfbf7] rounded-xl shadow-2xl border-4 border-amber-900/40 p-4 md:p-8 flex items-center">
-            
-            <!-- পেজ ১: প্রচ্ছদ (Cover) -->
-            <div class="page active" data-page="1">
-                <div class="page-face bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 p-8 flex flex-col justify-between items-center text-center border-4 border-amber-600/30">
-                    <div class="mt-12">
-                        <span class="text-xs uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full text-amber-200">ফটোগ্রাফি ও স্মৃতি</span>
-                        <h2 class="text-4xl md:text-5xl font-bold serif-font mt-6 text-amber-100">জীবনের সোনালী মুহূর্তগুলো</h2>
-                        <div class="w-24 h-1 bg-amber-400 mx-auto mt-4 rounded-full"></div>
+    <!-- থ্রি-ডি বুক স্টেজ -->
+    <main class="scene">
+        <div class="book" id="book">
+            <div class="book-spine"></div>
+
+            <!-- পেজ ১ (প্রচ্ছদ) -->
+            <div class="page" id="p1" onclick="turnPage(1)">
+                <div class="page-face front bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 p-8 flex flex-col justify-center items-center text-center">
+                    <span class="text-xs uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-4">ডিজিটাল অ্যালবাম</span>
+                    <h2 class="text-3xl md:text-4xl font-bold serif-font text-amber-100">স্মৃতির পাতা</h2>
+                    <div class="w-16 h-1 bg-amber-400 my-4 rounded-full"></div>
+                    <p class="text-xs text-amber-200/80 italic">খুলতে পাতায় ক্লিক করুন</p>
+                </div>
+                <div class="page-face back bg-[#fbf9f1] p-6 flex flex-col justify-between text-slate-800">
+                    <span class="text-xs text-amber-700 font-semibold">ভূমিকা</span>
+                    <div class="text-center">
+                        <h3 class="text-xl font-bold serif-font mb-2">অতীতের দিনগুলি</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">জীবনের কিছু মুহূর্ত ক্যামেরার ফ্রেমে বন্দী হয়ে চিরকালের মতো অমলিন হয়ে থাকে। এই অ্যালবামে সেইসব সোনালী মুহূর্তের কিছু ঝলক তুলে ধরা হলো।</p>
                     </div>
-                    <div class="mb-12">
-                        <p class="text-amber-200/80 italic text-sm">"পেজ উল্টাতে নিচের নেক্সট বাটনে ক্লিক করুন বা সোয়াইপ করুন"</p>
-                        <div class="mt-6 inline-block animate-bounce text-amber-300">
-                            <i class="fa-solid fa-hand-pointer text-xl"></i>
-                        </div>
-                    </div>
+                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ১</span>
                 </div>
             </div>
 
-            <!-- পেজ ২: ছবি ও লেখা ১ -->
-            <div class="page" data-page="2">
-                <div class="page-face bg-[#fbf9f1] text-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6 p-6 items-center">
-                    <div class="h-64 md:h-full rounded-lg overflow-hidden shadow-md border border-amber-200">
-                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Nature" class="w-full h-full object-cover">
+            <!-- পেজ ২ (ছবি ও বিবরণ ১) -->
+            <div class="page" id="p2" onclick="turnPage(2)">
+                <div class="page-face front bg-[#fbf9f1] p-4 flex flex-col justify-between text-slate-800">
+                    <span class="text-xs text-amber-700 font-semibold">অধ্যায় ১</span>
+                    <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+                        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Nature" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex flex-col justify-center space-y-3">
-                        <span class="text-xs font-semibold text-amber-700 tracking-wider">অধ্যায় ১</span>
-                        <h3 class="text-2xl font-bold serif-font text-slate-900">প্রকৃতির কোলে শান্ত দুপুর</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            চারপাশের কোলাহল থেকে দূরে, এই শান্ত পরিবেশে প্রকৃতির রূপ এক অন্য মাত্রা পায়। নদীর বয়ে চলা জল আর স্নিগ্ধ বাতাস মনের সব ক্লান্তি দূর করে দেয়।
-                        </p>
-                        <div class="text-xs text-slate-400 pt-2 border-t border-slate-200 flex justify-between">
-                            <span>তারিখ: ১৫ অক্টোবর, ২০২৬</span>
-                            <span>পৃষ্ঠা ২</span>
-                        </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900">পাহাড়ের কোলের স্নিগ্ধ সকাল</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">প্রকৃতির কাছাকাছি কাটানো সেই সময়গুলোর শান্তি আজও মনে দাগ কেটে যায়।</p>
                     </div>
+                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ২</span>
+                </div>
+                <div class="page-face back bg-[#fbf9f1] p-4 flex flex-col justify-between text-slate-800">
+                    <span class="text-xs text-amber-700 font-semibold">অধ্যায় ২</span>
+                    <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Forest" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm text-slate-900">সবুজের সমারোহ</h4>
+                        <p class="text-[11px] text-slate-600 mt-1">গভীর অরণ্যের মাঝ দিয়ে বয়ে চলা মেঠো পথ আর পাখির কলকাকলি।</p>
+                    </div>
+                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ৩</span>
                 </div>
             </div>
 
-            <!-- পেজ ৩: ছবি ও লেখা ২ -->
-            <div class="page" data-page="3">
-                <div class="page-face bg-[#fbf9f1] text-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6 p-6 items-center">
-                    <div class="h-64 md:h-full rounded-lg overflow-hidden shadow-md border border-amber-200">
-                        <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=800&q=80" alt="Forest" class="w-full h-full object-cover">
+            <!-- পেজ ৩ (শেষ পাতা) -->
+            <div class="page" id="p3" onclick="turnPage(3)">
+                <div class="page-face front bg-[#fbf9f1] p-6 flex flex-col justify-between text-slate-800">
+                    <span class="text-xs text-amber-700 font-semibold">উপসংহার</span>
+                    <div class="text-center space-y-3">
+                        <i class="fa-solid fa-heart text-3xl text-amber-600"></i>
+                        <h3 class="text-xl font-bold serif-font">ভালো থাকুন, স্মৃতির সাথে থাকুন</h3>
+                        <p class="text-xs text-slate-600">আমাদের এই ছোট্ট ভার্চুয়াল ডায়েরিটি পড়ার জন্য আপনাকে ধন্যবাদ।</p>
                     </div>
-                    <div class="flex flex-col justify-center space-y-3">
-                        <span class="text-xs font-semibold text-amber-700 tracking-wider">অধ্যায় ২</span>
-                        <h3 class="text-2xl font-bold serif-font text-slate-900">অরণ্যের রহস্যময় ছায়া</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            সবুজের গভীরতা আর পাতার ফাঁক দিয়ে উঁকি দেওয়া রোদ যেন এক রূপকথার জগত তৈরি করে। এখানে প্রতিটা গাছ যেন অতীতের কোনো না কোনো গল্প ফিসফিস করে বলে যায়।
-                        </p>
-                        <div class="text-xs text-slate-400 pt-2 border-t border-slate-200 flex justify-between">
-                            <span>তারিখ: ১৬ অক্টোবর, ২০২৬</span>
-                            <span>পৃষ্ঠা ৩</span>
-                        </div>
-                    </div>
+                    <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ৪</span>
                 </div>
-            </div>
-
-            <!-- পেজ ৪: শেষ পাতা -->
-            <div class="page" data-page="4">
-                <div class="page-face bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 p-8 flex flex-col justify-center items-center text-center border-4 border-amber-600/30">
-                    <i class="fa-solid fa-heart text-4xl text-amber-400 mb-4"></i>
-                    <h2 class="text-3xl font-bold serif-font text-amber-100">ধন্যবাদ</h2>
-                    <p class="text-amber-200/80 text-sm mt-3 max-w-md">
-                        আমাদের এই ভার্চুয়াল অ্যালবামটি দেখার জন্য আপনাকে অশেষ ধন্যবাদ। স্মৃতিগুলো চিরকাল অমলিন থাকুক।
-                    </p>
-                    <button onclick="resetBook()" class="mt-8 px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-white rounded-full font-medium transition shadow-lg text-sm">
-                        <i class="fa-solid fa-rotate-right mr-2"></i> আবার শুরু থেকে দেখুন
-                    </button>
+                <div class="page-face back bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 p-8 flex flex-col justify-center items-center text-center">
+                    <h3 class="text-2xl font-bold serif-font mb-2">সমাপ্ত</h3>
+                    <p class="text-xs text-amber-200/80 mb-6">আবার প্রথম থেকে দেখতে নিচের বাটন ব্যবহার করুন।</p>
+                    <button onclick="resetBook(event)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition shadow">শুরুতে ফিরে যান</button>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <!-- নেভিগেশন কন্ট্রোল (বাটনসমূহ) -->
-    <footer class="w-full max-w-md flex justify-between items-center mt-6 px-4">
-        <button id="prevBtn" onclick="changePage(-1)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded-full font-medium shadow-md transition flex items-center disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700">
-            <i class="fa-solid fa-arrow-left mr-2"></i> আগের পাতা
+    <!-- নেভিগেশন কন্ট্রোল -->
+    <footer class="w-full max-w-xs flex justify-between items-center mb-2">
+        <button onclick="prevPage()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700">
+            <i class="fa-solid fa-arrow-left mr-1"></i> পেছনের পাতা
         </button>
-        <span id="pageIndicator" class="text-sm font-semibold text-slate-300">১ / ৪</span>
-        <button id="nextBtn" onclick="changePage(1)" class="px-5 py-2.5 bg-amber-700 hover:bg-amber-600 text-white rounded-full font-medium shadow-md transition flex items-center disabled:opacity-40 disabled:cursor-not-allowed">
-            পরের পাতা <i class="fa-solid fa-arrow-right ml-2"></i>
+        <button onclick="nextPage()" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition">
+            পরের পাতা <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
     </footer>
 
-    <!-- জাভাস্ক্রিপ্ট কোড (পেইজিং ও সোয়াইপ লজিক) -->
+    <!-- জাভাস্ক্রিপ্ট লজিক -->
     <script>
-        let currentPage = 1;
-        const totalPages = 4;
+        let currentLocation = 1;
+        const numOfPages = 3;
 
-        function updateBook() {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach((page, index) => {
-                page.classList.remove('active');
-                if (index + 1 === currentPage) {
-                    page.classList.add('active');
+        function updateBookView() {
+            // পেজগুলোর ফ্লিপ স্ট্যাটাস সেট করা
+            for (let i = 1; i <= numOfPages; i++) {
+                const page = document.getElementById(`p${i}`);
+                if (i < currentLocation) {
+                    page.classList.add('flipped');
+                    page.style.zIndex = i;
+                } else {
+                    page.classList.remove('flipped');
+                    page.style.zIndex = numOfPages - i + 1;
                 }
-            });
-
-            // পেজ কাউন্টার আপডেট
-            document.getElementById('pageIndicator').innerText = `${currentPage} / ${totalPages}`;
-
-            // বাটন স্টেট আপডেট
-            document.getElementById('prevBtn').disabled = currentPage === 1;
-            document.getElementById('nextBtn').disabled = currentPage === totalPages;
-        }
-
-        function changePage(direction) {
-            if (currentPage + direction >= 1 && currentPage + direction <= totalPages) {
-                currentPage += direction;
-                updateBook();
             }
         }
 
-        function resetBook() {
-            currentPage = 1;
-            updateBook();
-        }
-
-        // টাচ বা সোয়াইপ সাপোর্ট (মোবাইলের জন্য)
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
-        document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
-
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50) {
-                // বাম দিকে সোয়াইপ করলে নেক্সট পেজ
-                changePage(1);
-            }
-            if (touchEndX > touchStartX + 50) {
-                // ডান দিকে সোয়াইপ করলে প্রিভিয়াস পেজ
-                changePage(-1);
+        function nextPage() {
+            if (currentLocation <= numOfPages) {
+                currentLocation++;
+                updateBookView();
             }
         }
 
-        // ইনিশিয়াল কল
-        updateBook();
+        function prevPage() {
+            if (currentLocation > 1) {
+                currentLocation--;
+                updateBookView();
+            }
+        }
+
+        function turnPage(pageNum) {
+            if (pageNum === currentLocation) {
+                nextPage();
+            } else if (pageNum === currentLocation - 1) {
+                prevPage();
+            }
+        }
+
+        function resetBook(event) {
+            event.stopPropagation();
+            currentLocation = 1;
+            updateBookView();
+        }
     </script>
 </body>
-  </html>
+</html>
