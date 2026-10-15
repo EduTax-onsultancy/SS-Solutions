@@ -2,8 +2,8 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D রিয়েলিস্টিক ফ্লিপ বুক অ্যালবাম</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>রিয়েলিস্টিক লাইব্রেরি বুক অ্যালবাম</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,7 +16,11 @@
     <style>
         body {
             font-family: 'Hind Siliguri', sans-serif;
-            background: radial-gradient(circle, #1a2332 0%, #0b111a 100%);
+            /* কাঠের টেবিল ও লাইব্রেরি অ্যাম্বিয়েন্স ব্যাকগ্রাউন্ড */
+            background: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1507842229432-604724734346?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -24,53 +28,44 @@
             align-items: center;
             justify-content: space-between;
             padding: 10px 0;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
         
-        /* থ্রি-ডি বুক কন্টেইনার শ্যাডো */
+        /* টেবিলের ওপর রাখা বইয়ের 3D শ্যাডো এবং লুক */
         #book-container {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
             flex-grow: 1;
-            filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.8));
+            filter: drop-shadow(0 35px 35px rgba(0, 0, 0, 0.9));
         }
 
-        /* পেজ ডিজাইন (রিয়ালিস্টিক কাগজের টেক্সচার ও মার্জিন) */
+        /* পেজ ডিজাইন (যাতে কোনো লেখা বাইরে না যায়) */
         .my-page {
-            background-color: #f7f3e9;
+            background-color: #fcf8f2;
             color: #2c2c2c;
-            padding: 24px 20px;
+            padding: 20px 16px;
             box-sizing: border-box;
-            border-left: 1px solid #e0d6c3;
-            border-right: 1px solid #d5c9b4;
+            border-left: 1px solid #e2d6c1;
+            border-right: 1px solid #d4c4aa;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.03);
-        }
-
-        /* বইয়ের মাঝখানের ভাঁজ বা স্পাইন শ্যাডো এফেক্ট */
-        .my-page::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 25px;
-            pointer-events: none;
+            overflow: hidden;
+            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
 
     <!-- হেডার -->
-    <header class="text-center mb-1">
-        <h1 class="text-lg md:text-2xl font-bold text-amber-100 serif-font">স্মৃতির অ্যালবাম ও ডায়েরি</h1>
-        <p class="text-[10px] md:text-xs text-slate-400">পাতায় আঙুল দিয়ে সোয়াইপ করুন বা টেনে উল্টান</p>
+    <header class="text-center mb-1 z-10">
+        <h1 class="text-lg md:text-2xl font-bold text-amber-100 serif-font tracking-wide">স্মৃতির লাইব্রেরি অ্যালবাম</h1>
+        <p class="text-[10px] md:text-xs text-amber-200/70">টেবিলে রাখা বইয়ের পাতায় সোয়াইপ করুন বা টেনে উল্টান</p>
     </header>
 
     <!-- বুক কন্টেইনার -->
@@ -79,19 +74,19 @@
             
             <!-- পেজ ১: প্রচ্ছদ (Cover) -->
             <div class="my-page bg-gradient-to-br from-amber-950 via-stone-900 to-amber-900 text-amber-100 !justify-center !items-center text-center border-l-4 border-amber-700">
-                <span class="text-[9px] uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-3 text-amber-200">বিশেষ সংগ্রহ</span>
+                <span class="text-[9px] uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-3 text-amber-200">ব্যক্তিগত সংগ্রহ</span>
                 <h2 class="text-2xl md:text-3xl font-bold serif-font text-amber-100 leading-snug">স্মৃতির সোনালী পাতা</h2>
                 <div class="w-12 h-1 bg-amber-500 my-3 rounded-full"></div>
-                <p class="text-[11px] text-amber-200/70 italic">খুলতে ডানদিক থেকে সোয়াইপ করুন</p>
+                <p class="text-[11px] text-amber-200/70 italic">বইটি খুলতে ডানদিক থেকে সোয়াইপ করুন</p>
             </div>
 
             <!-- পেজ ২: ভূমিকা -->
             <div class="my-page">
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">ভূমিকা</span>
-                <div class="text-center my-auto px-2">
-                    <i class="fa-solid fa-feather-pointed text-3xl text-amber-800/70 mb-3"></i>
-                    <h3 class="text-base font-bold serif-font mb-2 text-stone-800">অতীতের দিনগুলো</h3>
-                    <p class="text-[11px] md:text-xs text-stone-600 leading-relaxed">জীবনের সুন্দর মুহূর্তগুলো ফ্রেমবন্দী করে রাখার এক ক্ষুদ্র প্রয়াস। প্রতিটি পাতার পেছনে রয়েছে কোনো না কোনো মিষ্টি স্মৃতি ও গল্প।</p>
+                <div class="text-center my-auto px-1">
+                    <i class="fa-solid fa-feather-pointed text-2xl text-amber-800/70 mb-2"></i>
+                    <h3 class="text-sm md:text-base font-bold serif-font mb-2 text-stone-800">অতীতের দিনগুলো</h3>
+                    <p class="text-[11px] text-stone-600 leading-relaxed">জীবনের সুন্দর মুহূর্তগুলো ফ্রেমবন্দী করে রাখার এক ক্ষুদ্র প্রয়াস। প্রতিটি পাতার পেছনে রয়েছে কোনো না কোনো মিষ্টি স্মৃতি।</p>
                 </div>
                 <span class="text-[9px] text-stone-400 text-right">পৃষ্ঠা ২</span>
             </div>
@@ -99,12 +94,12 @@
             <!-- পেজ ৩: ছবি ১ -->
             <div class="my-page">
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">অধ্যায় ১</span>
-                <div class="h-52 md:h-64 rounded-md overflow-hidden shadow-sm border border-stone-300 my-2 bg-stone-100">
+                <div class="h-44 md:h-56 rounded-md overflow-hidden shadow-sm border border-stone-300 my-1 bg-stone-100">
                     <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Nature" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h4 class="font-bold text-xs text-stone-900">পাহাড়ের কোলের স্নিগ্ধ সকাল</h4>
-                    <p class="text-[10px] text-stone-600 mt-0.5">প্রকৃতির কাছাকাছি কাটানো সেই শান্ত মুহূর্তগুলো আজও মনে দোলা দেয়।</p>
+                    <p class="text-[10px] text-stone-600">প্রকৃতির কাছাকাছি কাটানো সেই শান্ত মুহূর্তগুলো আজও মনে দোলা দেয়।</p>
                 </div>
                 <span class="text-[9px] text-stone-400 text-right">পৃষ্ঠা ৩</span>
             </div>
@@ -112,12 +107,12 @@
             <!-- পেজ ৪: ছবি ২ -->
             <div class="my-page">
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">অধ্যায় ২</span>
-                <div class="h-52 md:h-64 rounded-md overflow-hidden shadow-sm border border-stone-300 my-2 bg-stone-100">
+                <div class="h-44 md:h-56 rounded-md overflow-hidden shadow-sm border border-stone-300 my-1 bg-stone-100">
                     <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Forest" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h4 class="font-bold text-xs text-stone-900">অরণ্যের গভীরতা</h4>
-                    <p class="text-[10px] text-stone-600 mt-0.5">সবুজের সমারোহ আর পাখির কলকাকলিতে মুখরিত এক চেনা পথ।</p>
+                    <p class="text-[10px] text-stone-600">সবুজের সমারোহ আর পাখির কলকাকলিতে মুখরিত এক চেনা পথ।</p>
                 </div>
                 <span class="text-[9px] text-stone-400 text-right">পৃষ্ঠা ৪</span>
             </div>
@@ -125,12 +120,12 @@
             <!-- পেজ ৫: ছবি ৩ -->
             <div class="my-page">
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">অধ্যায় ৩</span>
-                <div class="h-52 md:h-64 rounded-md overflow-hidden shadow-sm border border-stone-300 my-2 bg-stone-100">
+                <div class="h-44 md:h-56 rounded-md overflow-hidden shadow-sm border border-stone-300 my-1 bg-stone-100">
                     <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80" alt="Night Sky" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h4 class="font-bold text-xs text-stone-900">তারার মেলা</h4>
-                    <p class="text-[10px] text-stone-600 mt-0.5">রাতের খোলা আকাশের নিচে বসে কাটানো অবিস্মরণীয় সময়।</p>
+                    <p class="text-[10px] text-stone-600">রাতের খোলা আকাশের নিচে বসে কাটানো অবিস্মরণীয় সময়।</p>
                 </div>
                 <span class="text-[9px] text-stone-400 text-right">পৃষ্ঠা ৫</span>
             </div>
@@ -140,7 +135,7 @@
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">ডায়েরির পাতা</span>
                 <div class="my-auto space-y-2 px-1">
                     <h3 class="text-sm font-bold serif-font text-stone-800">কিছু না বলা কথা</h3>
-                    <p class="text-[11px] md:text-xs text-stone-600 leading-relaxed">
+                    <p class="text-[11px] text-stone-600 leading-relaxed">
                         সময় বয়ে যায় নদীর স্রোতের মতো। শুধু থেকে যায় কিছু ছবি আর সুমধুর স্মৃতি। যেদিনই এই পাতাগুলো উল্টাবো, সেদিনই পুরনো দিনে আবার ফিরে যাব।
                     </p>
                 </div>
@@ -150,12 +145,12 @@
             <!-- পেজ ৭: ছবি ৪ -->
             <div class="my-page">
                 <span class="text-[10px] text-amber-800 font-semibold uppercase tracking-wider">অধ্যায় ৪</span>
-                <div class="h-52 md:h-64 rounded-md overflow-hidden shadow-sm border border-stone-300 my-2 bg-stone-100">
+                <div class="h-44 md:h-56 rounded-md overflow-hidden shadow-sm border border-stone-300 my-1 bg-stone-100">
                     <img src="https://images.unsplash.com/photo-1426604966848-d7adac902bff?auto=format&fit=crop&w=600&q=80" alt="Landscape" class="w-full h-full object-cover">
                 </div>
                 <div>
                     <h4 class="font-bold text-xs text-stone-900">দিগন্তের রোদ</h4>
-                    <p class="text-[10px] text-stone-600 mt-0.5">সূর্যাস্তের সেই সোনালী আলো পুরো আকাশকে রাঙিয়ে দিয়েছিল।</p>
+                    <p class="text-[10px] text-stone-600">সূর্যাস্তের সেই সোনালী আলো পুরো আকাশকে রাঙিয়ে দিয়েছিল।</p>
                 </div>
                 <span class="text-[9px] text-stone-400 text-right">পৃষ্ঠা ৭</span>
             </div>
@@ -164,7 +159,7 @@
             <div class="my-page bg-gradient-to-br from-amber-950 via-stone-900 to-amber-900 text-amber-100 !justify-center !items-center text-center border-r-4 border-amber-700">
                 <i class="fa-solid fa-heart text-3xl text-amber-400 mb-3"></i>
                 <h3 class="text-xl md:text-2xl font-bold serif-font mb-1">সমাপ্ত</h3>
-                <p class="text-[11px] text-amber-200/70 mb-6">আমাদের সাথে থাকার জন্য ধন্যবাদ।</p>
+                <p class="text-[11px] text-amber-200/70 mb-5">আমাদের সাথে থাকার জন্য ধন্যবাদ।</p>
                 <button onclick="pageFlip.flip(0)" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs transition shadow-md">শুরুতে ফিরে যান</button>
             </div>
 
@@ -172,25 +167,25 @@
     </div>
 
     <!-- নেভিগেশন বাটন -->
-    <div class="flex gap-4 mt-2 mb-1">
-        <button onclick="pageFlip.prev()" class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700 flex items-center">
+    <div class="flex gap-4 mt-2 mb-1 z-10">
+        <button onclick="pageFlip.prev()" class="px-3 py-1.5 bg-slate-800/90 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700 flex items-center">
             <i class="fa-solid fa-arrow-left mr-1.5"></i> আগের পাতা
         </button>
-        <button onclick="pageFlip.next()" class="px-3.5 py-1.5 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition flex items-center">
+        <button onclick="pageFlip.next()" class="px-3 py-1.5 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition flex items-center">
             পরের পাতা <i class="fa-solid fa-arrow-right ml-1.5"></i>
         </button>
     </div>
 
-    <!-- রেসপন্সিভ ও লম্বা হাইট কনফিগারেশন -->
+    <!-- কনফিগারেশন ও ডিরেকশন ফিক্স -->
     <script>
         function getBookSize() {
             const width = window.innerWidth;
             if (width < 768) {
-                // মোবাইলের জন্য লম্বাটে সাইজ (Portrait mode)
-                return { width: width * 0.92, height: width * 1.45 };
+                // মোবাইলের জন্য লম্বাটে ডায়েরি সাইজ
+                return { width: width * 0.90, height: width * 1.35 };
             } else {
                 // ডেস্কটপের জন্য স্ট্যান্ডার্ড সাইজ
-                return { width: 400, height: 580 };
+                return { width: 400, height: 550 };
             }
         }
 
@@ -206,7 +201,9 @@
                 mobileScrollSupport: true,
                 usePortrait: true,
                 size: "stretch",
-                startPage: 0
+                startPage: 0,
+                // সোয়াইপ ডিরেকশন স্বাভাবিক নিয়মে সেট করা
+                swipeDistance: 30
             }
         );
 
