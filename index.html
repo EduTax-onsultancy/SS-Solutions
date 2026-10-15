@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>রিয়েলিস্টিক বুক ফ্লিপ অ্যালবাম</title>
+    <title>রিয়েলিস্টিক ফ্লিপ বুক অ্যালবাম</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
-    <!-- jQuery এবং Turn.js লাইব্রেরি (আসল বইয়ের পাতা উল্টানোর জন্য) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+    <!-- Page Flip Library (আধুনিক ও স্মুথ বুক ফ্লিপ লাইব্রেরি) -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 
     <style>
         body {
@@ -24,32 +23,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         .serif-font {
             font-family: 'Playfair Display', serif;
         }
-
-        /* ফ্লিপ বুক সাইজ */
-        #album {
-            width: 800px;
-            height: 500px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-        }
-
-        #album .page {
+        /* পেজ ডিজাইন */
+        .my-page {
             background-color: #fdfbf7;
             color: #2d3748;
-            padding: 20px;
+            padding: 30px;
             box-sizing: border-box;
-            border: 1px solid #d1c7bd;
-        }
-
-        @media (max-width: 850px) {
-            #album {
-                width: 95vw;
-                height: 400px;
-            }
+            border-left: 1px solid #d1c7bd;
+            border-right: 1px solid #d1c7bd;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -57,14 +46,15 @@
 
     <!-- হেডার -->
     <header class="text-center mb-4">
-        <h1 class="text-2xl md:text-3xl font-bold text-amber-100 serif-font">ভার্চুয়াল রিয়েলিস্টিক অ্যালবাম</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-amber-100 serif-font">ভার্চുয়াল রিয়েলিস্টিক অ্যালবাম</h1>
         <p class="text-xs text-slate-400 mt-1">পাতার কোণ ধরে মাউস দিয়ে টেনে বা নিচের বাটন দিয়ে পাতা উল্টান</p>
     </header>
 
     <!-- বুক কন্টেইনার -->
-    <div id="album">
+    <div id="book" class="shadow-2xl mb-4">
+        
         <!-- প্রচ্ছদ পাতা (Page 1) -->
-        <div class="page bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 flex flex-col justify-center items-center text-center">
+        <div class="my-page bg-gradient-to-br from-amber-800 to-amber-950 text-amber-100 !justify-center !items-center text-center">
             <span class="text-xs uppercase tracking-widest bg-amber-600/40 px-3 py-1 rounded-full mb-4">অ্যালবাম ও ডায়েরি</span>
             <h2 class="text-3xl md:text-4xl font-bold serif-font text-amber-100">স্মৃতির সোনালী পাতা</h2>
             <div class="w-16 h-1 bg-amber-400 my-4 rounded-full"></div>
@@ -72,22 +62,22 @@
         </div>
 
         <!-- পেজ ২ -->
-        <div class="page flex flex-col justify-between">
+        <div class="my-page">
             <span class="text-xs text-amber-700 font-semibold">অধ্যায় ১</span>
-            <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+            <div class="h-48 rounded overflow-hidden shadow border border-amber-200 my-2">
                 <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Nature" class="w-full h-full object-cover">
             </div>
             <div>
                 <h4 class="font-bold text-sm text-slate-900">প্রকৃতির স্নিগ্ধ রূপ</h4>
-                <p class="text-[11px] text-slate-600 mt-1">পাহাড়ের কোল ঘেষে বয়ে চলা নদী আর সকালের মিষ্টি রোদ।</p>
+                <p class="text-[11px] text-slate-600 mt-1">পাহাড়ের কোল ঘেঁষে বয়ে চলা নদী আর সকালের মিষ্টি রোদ।</p>
             </div>
             <span class="text-[10px] text-slate-400 text-right">পৃষ্ঠা ২</span>
         </div>
 
         <!-- পেজ ৩ -->
-        <div class="page flex flex-col justify-between">
+        <div class="my-page">
             <span class="text-xs text-amber-700 font-semibold">অধ্যায় ২</span>
-            <div class="h-48 rounded overflow-hidden shadow border border-amber-200">
+            <div class="h-48 rounded overflow-hidden shadow border border-amber-200 my-2">
                 <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80" alt="Forest" class="w-full h-full object-cover">
             </div>
             <div>
@@ -98,50 +88,40 @@
         </div>
 
         <!-- শেষ পাতা (Page 4) -->
-        <div class="page bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 flex flex-col justify-center items-center text-center">
+        <div class="my-page bg-gradient-to-br from-amber-900 to-amber-950 text-amber-100 !justify-center !items-center text-center">
             <i class="fa-solid fa-heart text-3xl text-amber-400 mb-3"></i>
             <h3 class="text-2xl font-bold serif-font mb-2">সমাপ্ত</h3>
             <p class="text-xs text-amber-200/80 mb-6">আমাদের সাথে থাকার জন্য ধন্যবাদ।</p>
-            <button onclick="$('#album').turn('page', 1);" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition shadow">শুরুতে ফিরে যান</button>
+            <button onclick="pageFlip.flip(0)" class="px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded text-xs transition shadow">শুরুতে ফিরে যান</button>
         </div>
+
     </div>
 
     <!-- নেভিগেশন বাটন -->
-    <div class="flex gap-4 mt-6">
-        <button onclick="$('#album').turn('previous');" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700">
+    <div class="flex gap-4 mt-2">
+        <button onclick="pageFlip.prev()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-amber-100 rounded text-xs shadow transition border border-slate-700">
             <i class="fa-solid fa-arrow-left mr-1"></i> আগের পাতা
         </button>
-        <button onclick="$('#album').turn('next');" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition">
+        <button onclick="pageFlip.next()" class="px-4 py-2 bg-amber-700 hover:bg-amber-600 text-white rounded text-xs shadow transition">
             পরের পাতা <i class="fa-solid fa-arrow-right ml-1"></i>
         </button>
     </div>
 
-    <!-- Turn.js ইনিশিয়ালাইজেশন স্ক্রিপ্ট -->
+    <!-- Page Flip ইনিশিয়ালাইজেশন স্ক্রিপ্ট -->
     <script>
-        $(document.ready = function() {
-            $('#album').turn({
-                width: 800,
-                height: 500,
-                autoCenter: true,
-                gradients: true,
-                elevation: 50,
-                when: {
-                    turning: function(e, page, view) {
-                        // পাতা উল্টানোর সময় কোনো বিশেষ কাজ করাতে চাইলে এখানে লেখা যাবে
-                    }
-                }
-            });
-        });
-
-        // রেসপন্সিভ করার জন্য স্ক্রিন সাইজ পরিবর্তন হলে বইয়ের সাইজ অ্যাডজাস্ট করা
-        $(window).resize(function() {
-            var width = $(window).width();
-            if(width < 850) {
-                $('#album').turn('size', width * 0.95, 400);
-            } else {
-                $('#album').turn('size', 800, 500);
+        const pageFlip = new St.PageFlip(
+            document.getElementById('book'),
+            {
+                width: 400, // এক একটি পেজের প্রস্থ
+                height: 500, // বইয়ের উচ্চতা
+                maxShadowOpacity: 0.5,
+                showCover: true,
+                mobileScrollSupport: false
             }
-        });
+        );
+
+        // পেজ লোড করা
+        pageFlip.loadFromHTML(document.querySelectorAll('.my-page'));
     </script>
 </body>
 </html>
